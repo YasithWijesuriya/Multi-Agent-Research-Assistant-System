@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./App.css";
+
 
 function App() {
   const [topic, setTopic] = useState("");
@@ -16,6 +18,14 @@ function App() {
     try {
       const res = await axios.post("http://127.0.0.1:8000/research", { topic });
       setReport(res.data.report);
+//!        Backend JSON response
+//!              ↓
+//!        res.data.report
+//!              ↓
+//!        setReport("final research text")
+//!              ↓
+//!        report state update
+
     } catch (err) {
       console.error(err);
       alert("Error fetching report");
@@ -24,33 +34,60 @@ function App() {
     }
   };
 
-  return (
-    <div style={{ padding: "2rem", fontFamily: "Arial" }}>
-      <h1>🤖 ResearchHub - AI Research Assistant</h1>
-      
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          placeholder="Enter research topic"
-          style={{ padding: "0.5rem", width: "300px" }}
-        />
-        <button type="submit" style={{ padding: "0.5rem 1rem", marginLeft: "1rem" }}>
-          {loading ? "Researching..." : "Start Research"}
-        </button>
-      </form>
+return (
+    <div className="container">
+      <div className="card">
+        <h1>🤖 ResearchHub</h1>
 
-      {report && (
-        <div style={{ marginTop: "2rem" }}>
-          <h2>📄 Final Research Report</h2>
-          <pre style={{ whiteSpace: "pre-wrap", background: "#f0f0f0", padding: "1rem" }}>
-            {report}
-          </pre>
-        </div>
-      )}
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="Enter research topic"
+          />
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Researching..." : "Start Research"}
+          </button>
+        </form>
+
+        {loading && <div className="spinner" />}
+
+        {report && (
+          <div className="report">
+            <h2>📄 Final Research Report</h2>
+            <pre>{report}</pre>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 export default App;
+
+
+// User types topic
+// ↓
+// topic state update
+// ↓
+// Submit button
+// ↓
+// axios POST request
+// ↓
+// FastAPI endpoint (/research)
+// ↓
+// run_research(topic)
+// ↓
+// final report string
+// ↓
+// JSON response
+// ↓
+// axios receives response
+// ↓
+// setReport(report)
+// ↓
+// React re-render
+// ↓
+// Report shown on screen

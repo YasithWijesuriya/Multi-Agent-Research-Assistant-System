@@ -18,6 +18,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+        #! allow_origins   -   කවුද call කරන්න පුළුවන්
+        #! allow_credentials -	cookies / auth
+        #! allow_methods   -	POST, GET, etc
+        #! allow_headers   -	Authorization, Content-Type
+
 # Endpoint for research
 @app.post("/research")
 async def research_topic(payload: dict):
